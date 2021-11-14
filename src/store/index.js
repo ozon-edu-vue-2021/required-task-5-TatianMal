@@ -21,7 +21,7 @@ const IMAGE_NAMES = [
 const getImage = () => {
   const rand = Math.random() * 12;
   const randIndex = Math.floor(rand);
-  return IMAGE_NAMES[randIndex];
+  return `@/assets/images/${IMAGE_NAMES[randIndex]}`;
 };
 
 const getPrice = () => {
@@ -38,6 +38,18 @@ export default new Vuex.Store({
   getters: {
     products(state) {
       return state.products;
+    },
+    productsInCart(state) {
+      return state.productsInCart;
+    },
+    totalCountProducts(state) {
+      return state.productsInCart.length;
+    },
+    totalCost(state) {
+      return state.productsInCart.reduce(
+        (acc, currentProduct) => acc + currentProduct.price,
+        0
+      );
     },
   },
   mutations: {
@@ -58,8 +70,8 @@ export default new Vuex.Store({
     addProductInCart(state, product) {
       state.productsInCart.push(product);
     },
-    deleteProductFromCard(state, payload) {
-      console.log(payload);
+    deleteProductFromCard(state, productIndex) {
+      state.productsInCart.splice(productIndex, 1);
     },
     setCountOfProduct(state, payload) {
       console.log(payload);
@@ -87,6 +99,24 @@ export default new Vuex.Store({
         return;
       }
       commit("addProductInCart", product);
+    },
+    deleteProductFromCard({ state, commit }, productId) {
+      const productIndex = state.products.findIndex(
+        (product) => product.id === productId
+      );
+      if (productIndex === -1) {
+        return;
+      }
+      commit("deleteProductFromCard", productIndex);
+    },
+    setCountOfProduct({ state, commit }, productId) {
+      const product = state.products.find(
+        (product) => product.id === productId
+      );
+      if (!product) {
+        return;
+      }
+      commit("setCountOfProduct", productId);
     },
   },
   modules: {},

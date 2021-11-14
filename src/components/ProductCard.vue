@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     imageUrl() {
-      return require(`@/assets/images/${this.product.image}`);
+      return require(this.product.image);
     },
     price() {
       return `Цена: ${this.product.price}`;
