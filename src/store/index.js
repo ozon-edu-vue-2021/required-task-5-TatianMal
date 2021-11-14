@@ -3,6 +3,32 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+const IMAGE_NAMES = [
+  "6123150777.webp",
+  "6126039472.webp",
+  "6126040354.webp",
+  "6128597660.webp",
+  "6134992334.webp",
+  "6136170572.webp",
+  "6136172483.webp",
+  "6140906765.webp",
+  "6142673815.webp",
+  "6142681673.webp",
+  "6142683276.webp",
+  "6148226736.webp",
+];
+
+const getImage = () => {
+  const rand = Math.random() * 12;
+  const randIndex = Math.floor(rand);
+  return IMAGE_NAMES[randIndex];
+};
+
+const getPrice = () => {
+  const randPrice = 100 + Math.random() * 2000;
+  return Math.floor(randPrice);
+};
+
 export default new Vuex.Store({
   state: {
     products: [],
@@ -16,6 +42,11 @@ export default new Vuex.Store({
   },
   mutations: {
     setProducts(state, payload) {
+      const products = payload;
+      products.forEach((product) => {
+        product.image = getImage();
+        product.price = getPrice();
+      });
       state.products = payload;
     },
     setError(state, payload) {
@@ -24,8 +55,8 @@ export default new Vuex.Store({
     resetError(state, payload) {
       console.log(payload);
     },
-    addProductInCart(state, payload) {
-      console.log(payload);
+    addProductInCart(state, product) {
+      state.productsInCart.push(product);
     },
     deleteProductFromCard(state, payload) {
       console.log(payload);
@@ -39,7 +70,6 @@ export default new Vuex.Store({
       const url = "https://random-data-api.com/api/food/random_food?size=30";
       try {
         const responce = await fetch(url);
-        console.log(responce);
         if (!responce.ok) {
           throw new Error(`HTTP error: ${responce.status}`);
         }
@@ -48,6 +78,15 @@ export default new Vuex.Store({
       } catch (err) {
         commit("setError", err);
       }
+    },
+    addProductInCart({ state, commit }, productId) {
+      const product = state.products.find(
+        (product) => product.id === productId
+      );
+      if (!product) {
+        return;
+      }
+      commit("addProductInCart", product);
     },
   },
   modules: {},

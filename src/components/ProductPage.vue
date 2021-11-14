@@ -1,7 +1,13 @@
 <template>
-  <main>
-    {{ products }}
-    <product-card v-if="false"></product-card>
+  <main class="product-page">
+    <product-card
+      v-for="product in products"
+      :key="product.uid"
+      :product="product"
+      class="mt-2"
+      @add-in-cart="addProductInCart"
+    >
+    </product-card>
   </main>
 </template>
 
@@ -22,6 +28,7 @@ export default {
   methods: {
     ...mapActions({
       downloadProducts: "downloadProducts",
+      addProductInCart: "addProductInCart",
     }),
   },
   async created() {
@@ -30,4 +37,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.product-page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+</style>
