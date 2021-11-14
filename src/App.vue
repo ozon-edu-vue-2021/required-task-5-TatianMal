@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <product-page>
-    </product-page>
+    <product-page></product-page>
   </div>
 </template>
 
