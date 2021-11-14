@@ -1,14 +1,17 @@
 <template>
   <div id="app">
+    <product-page>
+    </product-page>
   </div>
 </template>
 
 <script>
+import ProductPage from "@/components/ProductPage";
 
 export default {
   name: "App",
   components: {
-    Form,
+    ProductPage,
   },
 };
 </script>
