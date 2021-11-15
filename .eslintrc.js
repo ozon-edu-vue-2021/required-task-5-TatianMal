@@ -13,8 +13,8 @@ module.exports = {
     "prettier/prettier": [
       "error",
       {
-        "endOfLine": "auto",
-        "indent": ["error", 2]
+        endOfLine: "auto",
+        indent: ["error", 2],
       },
     ],
   },

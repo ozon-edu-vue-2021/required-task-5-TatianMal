@@ -21,7 +21,7 @@ const IMAGE_NAMES = [
 const getImage = () => {
   const rand = Math.random() * 12;
   const randIndex = Math.floor(rand);
-  return `@/assets/images/${IMAGE_NAMES[randIndex]}`;
+  return IMAGE_NAMES[randIndex];
 };
 
 const getPrice = () => {
@@ -101,7 +101,7 @@ export default new Vuex.Store({
       commit("addProductInCart", product);
     },
     deleteProductFromCard({ state, commit }, productId) {
-      const productIndex = state.products.findIndex(
+      const productIndex = state.productsInCart.findIndex(
         (product) => product.id === productId
       );
       if (productIndex === -1) {
@@ -110,7 +110,7 @@ export default new Vuex.Store({
       commit("deleteProductFromCard", productIndex);
     },
     setCountOfProduct({ state, commit }, productId) {
-      const product = state.products.find(
+      const product = state.productsInCart.find(
         (product) => product.id === productId
       );
       if (!product) {

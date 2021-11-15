@@ -1,36 +1,31 @@
 <template>
   <div id="app">
-    <product-page></product-page>
+    <div id="nav">
+      <router-link to="/">Магазин</router-link> |
+      <router-link to="/cart">Корзина</router-link>
+    </div>
+    <router-view />
   </div>
 </template>
 
-<script>
-import ProductPage from "@/components/ProductPage";
-
-export default {
-  name: "App",
-  components: {
-    ProductPage,
-  },
-};
-</script>
-
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  background-color: #fafafa;
-  padding: 24px;
-  box-sizing: border-box;
 }
 
-html,
-body,
-#app {
-  height: 100%;
-}
+#nav {
+  padding: 30px;
 
-* {
-  box-sizing: border-box;
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
 }
 </style>
