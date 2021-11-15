@@ -58,6 +58,7 @@ export default new Vuex.Store({
       products.forEach((product) => {
         product.image = getImage();
         product.price = getPrice();
+        product.isFavourite = false;
       });
       state.products = payload;
     },
@@ -68,13 +69,17 @@ export default new Vuex.Store({
       console.log(payload);
     },
     addProductInCart(state, product) {
-      state.productsInCart.push(product);
+      const productParams = {
+        product,
+        count: 1,
+      };
+      state.productsInCart.push(productParams);
     },
     deleteProductFromCard(state, productIndex) {
       state.productsInCart.splice(productIndex, 1);
     },
     setCountOfProduct(state, payload) {
-      console.log(payload);
+      payload.product.count = payload.count;
     },
   },
   actions: {
@@ -102,21 +107,21 @@ export default new Vuex.Store({
     },
     deleteProductFromCard({ state, commit }, productId) {
       const productIndex = state.productsInCart.findIndex(
-        (product) => product.id === productId
+        (product) => product.product.id === productId
       );
       if (productIndex === -1) {
         return;
       }
       commit("deleteProductFromCard", productIndex);
     },
-    setCountOfProduct({ state, commit }, productId) {
+    setCountOfProduct({ state, commit }, { productId, count }) {
       const product = state.productsInCart.find(
-        (product) => product.id === productId
+        (product) => product.product.id === productId
       );
       if (!product) {
         return;
       }
-      commit("setCountOfProduct", productId);
+      commit("setCountOfProduct", { product, count });
     },
   },
   modules: {},
