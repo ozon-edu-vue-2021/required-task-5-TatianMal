@@ -13,19 +13,34 @@
       </div>
     </v-card-text>
     <v-card-actions>
-      <v-btn v-if="!isProductInCart" color="primary" text @click="addInCart">
-        В корзину
-      </v-btn>
-      <product-counter
-        v-else
-        :count="count"
-        @input="
-          setCountOfProduct({
-            productId: product.id,
-            count: $event,
-          })
-        "
-      ></product-counter>
+      <div>
+        <v-btn v-if="!isProductInCart" color="primary" text @click="addInCart">
+          В корзину
+        </v-btn>
+        <product-counter
+          v-else
+          :count="count"
+          @input="
+            setCountOfProduct({
+              productId: product.id,
+              count: $event,
+            })
+          "
+        ></product-counter>
+      </div>
+      <div>
+        <v-btn
+          v-if="!isFavourite"
+          color="primary"
+          text
+          @click="addInFavourites"
+        >
+          В избранное
+        </v-btn>
+        <v-btn v-else color="primary" text @click="deleteFromFavourites">
+          Убрать из избранного
+        </v-btn>
+      </div>
     </v-card-actions>
   </v-card>
 </template>
@@ -51,6 +66,10 @@ export default {
       type: Number,
       default: 0,
     },
+    isFavourite: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     imageUrl() {
@@ -66,6 +85,12 @@ export default {
     },
     setCountOfProduct(e) {
       this.$emit("set-count", e);
+    },
+    addInFavourites() {
+      this.$emit("add-in-favourites", this.product.id);
+    },
+    deleteFromFavourites() {
+      this.$emit("delete-from-favourites", this.product.id);
     },
   },
 };

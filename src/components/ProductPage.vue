@@ -5,10 +5,13 @@
       :key="product.uid"
       :product="product"
       :is-product-in-cart="checkProductInCart(product.id)"
+      :is-favourite="isProductFavourite(product.id)"
       :count="getProductCount(product.id)"
       class="mt-2"
       @add-in-cart="addProductInCart"
       @set-count="setCountOfProduct"
+      @add-in-favourites="addProductInFavourite"
+      @delete-from-favourites="deleteProductFromFavourite"
     >
     </product-card>
   </main>
@@ -27,6 +30,7 @@ export default {
     ...mapGetters({
       products: "products",
       productsInCart: "productsInCart",
+      isProductFavourite: "isProductFavourite",
     }),
   },
   methods: {
@@ -34,6 +38,8 @@ export default {
       downloadProducts: "downloadProducts",
       addProductInCart: "addProductInCart",
       setCountOfProduct: "setCountOfProduct",
+      addProductInFavourite: "addProductInFavourite",
+      deleteProductFromFavourite: "deleteProductFromFavourite",
     }),
     checkProductInCart(productId) {
       return !!this.getProductCount(productId);

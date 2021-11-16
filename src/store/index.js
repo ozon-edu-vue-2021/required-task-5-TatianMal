@@ -34,7 +34,7 @@ export default new Vuex.Store({
     products: [],
     productsInCart: [],
     countersProductInCart: [],
-    favourProducts: [],
+    favouriteProducts: [],
     error: "",
   },
   getters: {
@@ -67,21 +67,30 @@ export default new Vuex.Store({
         return acc + currentProduct.price * counter.count;
       }, 0);
     },
+    favouriteProducts(state) {
+      return state.favouriteProducts;
+    },
+    isProductFavourite: (state) => (productId) => {
+      return !!state.favouriteProducts.find(
+        (product) => product.id === productId
+      );
+    },
   },
   mutations: {
-    setProducts(state, payload) {
-      const products = payload;
-      products.forEach((product) => {
-        product.image = getImage();
-        product.price = getPrice();
-      });
-      state.products = payload;
-    },
     setError(state, payload) {
       console.log(payload);
     },
     resetError(state, payload) {
       console.log(payload);
+    },
+    setProducts(state, products) {
+      state.products = products.map((product) => {
+        return {
+          ...product,
+          image: getImage(),
+          price: getPrice(),
+        };
+      });
     },
     addProductInCart(state, product) {
       const startProductCounter = {
@@ -110,8 +119,12 @@ export default new Vuex.Store({
       }
       counter.count = count;
     },
-    addProductInFavourite() {},
-    removeProductFromFavourite() {},
+    addProductInFavourite(state, product) {
+      state.favouriteProducts.push(product);
+    },
+    deleteProductFromFavourite(state, productIndex) {
+      state.favouriteProducts.splice(productIndex, 1);
+    },
   },
   actions: {
     async downloadProducts({ commit }) {
@@ -154,8 +167,24 @@ export default new Vuex.Store({
       }
       commit("setCountOfProduct", { productId, count });
     },
-    addProductInFavourite() {},
-    removeProductFromFavourite() {},
+    addProductInFavourite({ state, commit }, productId) {
+      const product = state.products.find(
+        (product) => product.id === productId
+      );
+      if (!product) {
+        return;
+      }
+      commit("addProductInFavourite", product);
+    },
+    deleteProductFromFavourite({ state, commit }, productId) {
+      const productIndex = state.favouriteProducts.findIndex(
+        (product) => product.id === productId
+      );
+      if (productIndex === -1) {
+        return;
+      }
+      commit("deleteProductFromFavourite", productIndex);
+    },
   },
   modules: {},
 });
