@@ -6,13 +6,13 @@
           <v-list-item
             v-for="{ product, count } in products"
             :key="product.uid"
+            class="d-flex"
           >
-            <v-list-item-icon>
-              <v-img height="100" width="300" :src="imageUrl(product)"></v-img>
-            </v-list-item-icon>
+            <v-img height="100" width="100" :src="getImageUrl(product)"></v-img>
             <v-list-item-title>
               {{ product.dish }}
             </v-list-item-title>
+            <div>{{ getPrice(product) }}</div>
             <div>
               <span>Количество:</span>
               <product-counter
@@ -25,11 +25,9 @@
                 "
               ></product-counter>
             </div>
-            <v-list-item-action>
-              <v-btn text @click="deleteProductFromCard(product.id)">
-                Удалить
-              </v-btn>
-            </v-list-item-action>
+            <v-btn text @click="deleteProductFromCard(product.id)">
+              Удалить
+            </v-btn>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -78,14 +76,18 @@ export default {
       deleteProductFromCard: "deleteProductFromCard",
       setCountOfProduct: "setCountOfProduct",
     }),
-    imageUrl(product) {
+    getImageUrl(product) {
       return require(`@/assets/images/${product.image}`);
     },
-    price(product) {
+    getPrice(product) {
       return `Цена: ${product.price}`;
     },
     buyProducts() {
-      alert(this.products.map((product) => product.dish).join(", "));
+      alert(
+        this.products
+          .map(({ product, count }) => `${product.dish} кол-во: ${count}`)
+          .join("; ")
+      );
     },
   },
 };

@@ -13,18 +13,43 @@
       </div>
     </v-card-text>
     <v-card-actions>
-      <v-btn color="primary" text @click="addInCart"> В корзину </v-btn>
+      <v-btn v-if="!isProductInCart" color="primary" text @click="addInCart">
+        В корзину
+      </v-btn>
+      <product-counter
+        v-else
+        :count="count"
+        @input="
+          setCountOfProduct({
+            productId: product.id,
+            count: $event,
+          })
+        "
+      ></product-counter>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import ProductCounter from "@/components/ProductCounter";
+
 export default {
   name: "ProductCard",
+  components: {
+    ProductCounter,
+  },
   props: {
     product: {
       type: Object,
       required: true,
+    },
+    isProductInCart: {
+      type: Boolean,
+      default: false,
+    },
+    count: {
+      type: Number,
+      default: 0,
     },
   },
   computed: {
@@ -38,6 +63,9 @@ export default {
   methods: {
     addInCart() {
       this.$emit("add-in-cart", this.product.id);
+    },
+    setCountOfProduct(e) {
+      this.$emit("set-count", e);
     },
   },
 };
