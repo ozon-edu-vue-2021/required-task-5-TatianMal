@@ -19,7 +19,7 @@ const IMAGE_NAMES = [
 ];
 
 const getImage = () => {
-  const rand = Math.random() * 12;
+  const rand = Math.random() * IMAGE_NAMES.length;
   const randIndex = Math.floor(rand);
   return IMAGE_NAMES[randIndex];
 };
@@ -33,6 +33,8 @@ export default new Vuex.Store({
   state: {
     products: [],
     productsInCart: [],
+    countersProductInCart: [],
+    favourProducts: [],
     error: "",
   },
   getters: {
@@ -40,16 +42,30 @@ export default new Vuex.Store({
       return state.products;
     },
     productsInCart(state) {
-      return state.productsInCart;
+      const productsCart = state.productsInCart.map((product) => {
+        const counter = state.countersProductInCart.find(
+          (c) => c.productId === product.id
+        );
+        return {
+          product,
+          count: counter.count,
+        };
+      });
+      return productsCart;
     },
     totalCountProducts(state) {
-      return state.productsInCart.length;
-    },
-    totalCost(state) {
-      return state.productsInCart.reduce(
-        (acc, currentProduct) => acc + currentProduct.price,
+      return state.countersProductInCart.reduce(
+        (acc, currentCounter) => acc + currentCounter.count,
         0
       );
+    },
+    totalCost(state) {
+      return state.productsInCart.reduce((acc, currentProduct) => {
+        const counter = state.countersProductInCart.find(
+          (c) => c.productId === currentProduct.id
+        );
+        return acc + currentProduct.price * counter.count;
+      }, 0);
     },
   },
   mutations: {
@@ -58,7 +74,6 @@ export default new Vuex.Store({
       products.forEach((product) => {
         product.image = getImage();
         product.price = getPrice();
-        product.isFavourite = false;
       });
       state.products = payload;
     },
@@ -69,18 +84,34 @@ export default new Vuex.Store({
       console.log(payload);
     },
     addProductInCart(state, product) {
-      const productParams = {
-        product,
+      const startProductCounter = {
+        productId: product.id,
         count: 1,
       };
-      state.productsInCart.push(productParams);
+      state.productsInCart.push(product);
+      state.countersProductInCart.push(startProductCounter);
     },
-    deleteProductFromCard(state, productIndex) {
+    deleteProductFromCard(state, { productIndex, productId }) {
       state.productsInCart.splice(productIndex, 1);
+      const idx = state.countersProductInCart.findIndex(
+        (counter) => counter.productId === productId
+      );
+      if (idx === -1) {
+        return;
+      }
+      state.countersProductInCart.splice(idx, 1);
     },
-    setCountOfProduct(state, payload) {
-      payload.product.count = payload.count;
+    setCountOfProduct(state, { productId, count }) {
+      const counter = state.countersProductInCart.find(
+        (counter) => counter.productId === productId
+      );
+      if (!counter) {
+        return;
+      }
+      counter.count = count;
     },
+    addProductInFavourite() {},
+    removeProductFromFavourite() {},
   },
   actions: {
     async downloadProducts({ commit }) {
@@ -107,22 +138,24 @@ export default new Vuex.Store({
     },
     deleteProductFromCard({ state, commit }, productId) {
       const productIndex = state.productsInCart.findIndex(
-        (product) => product.product.id === productId
+        (product) => product.id === productId
       );
       if (productIndex === -1) {
         return;
       }
-      commit("deleteProductFromCard", productIndex);
+      commit("deleteProductFromCard", { productIndex, productId });
     },
     setCountOfProduct({ state, commit }, { productId, count }) {
       const product = state.productsInCart.find(
-        (product) => product.product.id === productId
+        (product) => product.id === productId
       );
       if (!product) {
         return;
       }
-      commit("setCountOfProduct", { product, count });
+      commit("setCountOfProduct", { productId, count });
     },
+    addProductInFavourite() {},
+    removeProductFromFavourite() {},
   },
   modules: {},
 });

@@ -3,24 +3,23 @@
     <v-col cols="8">
       <v-list v-if="hasProducts">
         <v-list-item-group>
-          <v-list-item v-for="product in products" :key="product.uid">
+          <v-list-item
+            v-for="{ product, count } in products"
+            :key="product.uid"
+          >
             <v-list-item-icon>
-              <v-img
-                height="100"
-                width="300"
-                :src="imageUrl(product.product)"
-              ></v-img>
+              <v-img height="100" width="300" :src="imageUrl(product)"></v-img>
             </v-list-item-icon>
             <v-list-item-title>
-              {{ product.product.dish }}
+              {{ product.dish }}
             </v-list-item-title>
             <div>
               <span>Количество:</span>
               <product-counter
-                :count="product.count"
+                :count="count"
                 @input="
                   setCountOfProduct({
-                    productId: product.product.id,
+                    productId: product.id,
                     count: $event,
                   })
                 "
