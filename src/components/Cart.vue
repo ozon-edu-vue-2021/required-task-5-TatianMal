@@ -3,50 +3,18 @@
     <v-col cols="8">
       <v-list v-if="hasProducts">
         <v-list-item-group>
-          <v-list-item
+          <cart-product
             v-for="{ product, count } in products"
             :key="product.uid"
+            :product="product"
+            :count="count"
+            :is-favourite="isProductFavourite(product.id)"
             class="d-flex"
-          >
-            <v-img height="100" width="100" :src="getImageUrl(product)"></v-img>
-            <v-list-item-title>
-              {{ product.dish }}
-            </v-list-item-title>
-            <div>{{ getPrice(product) }}</div>
-            <div>
-              <span>Количество:</span>
-              <product-counter
-                :count="count"
-                @input="
-                  setCountOfProduct({
-                    productId: product.id,
-                    count: $event,
-                  })
-                "
-              ></product-counter>
-            </div>
-            <v-btn text @click="deleteProductFromCard(product.id)">
-              Удалить
-            </v-btn>
-            <div>
-              <v-btn
-                v-if="!isProductFavourite(product.id)"
-                color="primary"
-                text
-                @click="addProductInFavourite(product.id)"
-              >
-                В избранное
-              </v-btn>
-              <v-btn
-                v-else
-                color="primary"
-                text
-                @click="deleteProductFromFavourite(product.id)"
-              >
-                Убрать из избранного
-              </v-btn>
-            </div>
-          </v-list-item>
+            @delete-from-cart="deleteProductFromCard"
+            @set-count="setCountOfProduct"
+            @add-in-favourites="addProductInFavourite"
+            @delete-from-favourites="deleteProductFromFavourite"
+          ></cart-product>
         </v-list-item-group>
       </v-list>
       <v-card v-else flat> В корзине пока нет товаров :( </v-card>
@@ -72,12 +40,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
-import ProductCounter from "@/components/ProductCounter";
+import CartProduct from "@/components/CartProduct";
 
 export default {
   name: "Cart",
   components: {
-    ProductCounter,
+    CartProduct,
   },
   computed: {
     ...mapGetters({
@@ -97,12 +65,6 @@ export default {
       addProductInFavourite: "addProductInFavourite",
       deleteProductFromFavourite: "deleteProductFromFavourite",
     }),
-    getImageUrl(product) {
-      return require(`@/assets/images/${product.image}`);
-    },
-    getPrice(product) {
-      return `Цена: ${product.price}`;
-    },
     buyProducts() {
       alert(
         this.products
