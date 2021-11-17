@@ -44,9 +44,6 @@ export default {
       deleteProductFromFavourite: "deleteProductFromFavourite",
     }),
   },
-  async created() {
-    await this.downloadProducts();
-  },
 };
 </script>
 

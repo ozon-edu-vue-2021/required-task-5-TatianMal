@@ -9,6 +9,22 @@
   </div>
 </template>
 
+<script>
+import { mapActions } from "vuex";
+
+export default {
+  name: "App",
+  methods: {
+    ...mapActions({
+      downloadProducts: "downloadProducts",
+    }),
+  },
+  async created() {
+    await this.downloadProducts();
+  },
+};
+</script>
+
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
