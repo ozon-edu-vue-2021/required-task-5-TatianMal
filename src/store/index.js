@@ -75,6 +75,15 @@ export default new Vuex.Store({
         (product) => product.id === productId
       );
     },
+    isProductInCart: (state) => (productId) => {
+      return !!state.productsInCart.find((product) => product.id === productId);
+    },
+    getProductCount: (state) => (productId) => {
+      const counter = state.countersProductInCart.find(
+        (c) => c.productId === productId
+      );
+      return !counter ? 0 : counter.count;
+    },
   },
   mutations: {
     setError(state, payload) {

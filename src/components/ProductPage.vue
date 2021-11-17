@@ -4,7 +4,7 @@
       v-for="product in products"
       :key="product.uid"
       :product="product"
-      :is-product-in-cart="checkProductInCart(product.id)"
+      :is-product-in-cart="isProductInCart(product.id)"
       :is-favourite="isProductFavourite(product.id)"
       :count="getProductCount(product.id)"
       class="mt-2"
@@ -31,6 +31,8 @@ export default {
       products: "products",
       productsInCart: "productsInCart",
       isProductFavourite: "isProductFavourite",
+      isProductInCart: "isProductInCart",
+      getProductCount: "getProductCount",
     }),
   },
   methods: {
@@ -41,15 +43,6 @@ export default {
       addProductInFavourite: "addProductInFavourite",
       deleteProductFromFavourite: "deleteProductFromFavourite",
     }),
-    checkProductInCart(productId) {
-      return !!this.getProductCount(productId);
-    },
-    getProductCount(productId) {
-      const productInCart = this.productsInCart.find(
-        ({ product }) => product.id === productId
-      );
-      return !productInCart ? 0 : productInCart.count;
-    },
   },
   async created() {
     await this.downloadProducts();

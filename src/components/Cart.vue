@@ -30,10 +30,10 @@
             </v-btn>
             <div>
               <v-btn
-                v-if="!checkIsFavourite(product.id)"
+                v-if="!isProductFavourite(product.id)"
                 color="primary"
                 text
-                @click="addInFavourites(product.id)"
+                @click="addProductInFavourite(product.id)"
               >
                 В избранное
               </v-btn>
@@ -41,7 +41,7 @@
                 v-else
                 color="primary"
                 text
-                @click="deleteFromFavourites(product.id)"
+                @click="deleteProductFromFavourite(product.id)"
               >
                 Убрать из избранного
               </v-btn>
@@ -102,15 +102,6 @@ export default {
     },
     getPrice(product) {
       return `Цена: ${product.price}`;
-    },
-    addInFavourites(id) {
-      this.addProductInFavourite(id);
-    },
-    deleteFromFavourites(id) {
-      this.deleteProductFromFavourite(id);
-    },
-    checkIsFavourite(id) {
-      return this.isProductFavourite(id);
     },
     buyProducts() {
       alert(
