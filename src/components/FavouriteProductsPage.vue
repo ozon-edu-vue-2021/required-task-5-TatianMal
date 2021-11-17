@@ -22,20 +22,19 @@ import ProductCard from "@/components/ProductCard";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "ProductPage",
+  name: "FavouriteProductsPage",
   components: {
     ProductCard,
   },
   computed: {
     ...mapGetters({
-      products: "products",
+      products: "favouriteProducts",
       productsInCart: "productsInCart",
       isProductFavourite: "isProductFavourite",
     }),
   },
   methods: {
     ...mapActions({
-      downloadProducts: "downloadProducts",
       addProductInCart: "addProductInCart",
       setCountOfProduct: "setCountOfProduct",
       addProductInFavourite: "addProductInFavourite",
@@ -50,9 +49,6 @@ export default {
       );
       return !productInCart ? 0 : productInCart.count;
     },
-  },
-  async created() {
-    await this.downloadProducts();
   },
 };
 </script>

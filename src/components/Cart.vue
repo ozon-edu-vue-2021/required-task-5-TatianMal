@@ -28,6 +28,24 @@
             <v-btn text @click="deleteProductFromCard(product.id)">
               Удалить
             </v-btn>
+            <div>
+              <v-btn
+                v-if="!checkIsFavourite(product.id)"
+                color="primary"
+                text
+                @click="addInFavourites(product.id)"
+              >
+                В избранное
+              </v-btn>
+              <v-btn
+                v-else
+                color="primary"
+                text
+                @click="deleteFromFavourites(product.id)"
+              >
+                Убрать из избранного
+              </v-btn>
+            </div>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -66,6 +84,7 @@ export default {
       products: "productsInCart",
       count: "totalCountProducts",
       totalCost: "totalCost",
+      isProductFavourite: "isProductFavourite",
     }),
     hasProducts() {
       return this.products?.length > 0;
@@ -75,12 +94,23 @@ export default {
     ...mapActions({
       deleteProductFromCard: "deleteProductFromCard",
       setCountOfProduct: "setCountOfProduct",
+      addProductInFavourite: "addProductInFavourite",
+      deleteProductFromFavourite: "deleteProductFromFavourite",
     }),
     getImageUrl(product) {
       return require(`@/assets/images/${product.image}`);
     },
     getPrice(product) {
       return `Цена: ${product.price}`;
+    },
+    addInFavourites(id) {
+      this.addProductInFavourite(id);
+    },
+    deleteFromFavourites(id) {
+      this.deleteProductFromFavourite(id);
+    },
+    checkIsFavourite(id) {
+      return this.isProductFavourite(id);
     },
     buyProducts() {
       alert(
